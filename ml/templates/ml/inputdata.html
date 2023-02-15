@@ -1,0 +1,28 @@
+{% extends 'blog/base_full_width.html' %}
+{% load crispy_forms_tags %}
+{% block head_title %}ml_inputdata{% endblock %}
+
+{% block main_area %}
+<h1>타이타닉 생존자 예측</h1><br>
+<h2>Input Data</h2><br>
+
+    <form action="{% url 'ml_result' %}">
+        fare_cat: <input type="text" required name="fare_cat"><br>
+        <br>
+        age_cat: <input type="text" required name="age_cat"><br>
+        <br>
+        family: <input type="text" required name="family"><br>
+        <br>
+        female: <input type="text" required name="female"><br>
+        <br>
+        male: <input type="text" required name="male"><br>
+        <br>
+        town_C: <input type="text" required name="town_C"><br>
+        <br>
+        town_Q: <input type="text" required name="town_Q"><br>
+        <br>
+        town_S: <input type="text" required name="town_S"><br>
+        <br>
+                <input type="submit" name="" value="submit">
+    </form>
+{% endblock %}

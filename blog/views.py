@@ -1,15 +1,3 @@
-# from django.shortcuts import render
-# from django.views.generic import ListView, DetailView
-# from .models import Post
-
-# class PostList(ListView):
-#     model = Post
-#     ordering = '-pk'
-
-# class PostDetail(DetailView):
-#     model = Post
-
-# 0210
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -24,19 +12,20 @@ class PostList(ListView):
     model = Post
     ordering = '-pk'
     paginate_by = 5
-
+    
     def get_context_data(self, **kwargs):
         context = super(PostList, self).get_context_data()
         context['categories'] = Category.objects.all()
         context['no_category_post_count'] = Post.objects.filter(category=None).count()
         return context
-
+    
 class PostDetail(DetailView):
     model = Post
     def get_context_data(self, **kwargs):
         context = super(PostDetail, self).get_context_data()
         context['categories'] = Category.objects.all()
         context['no_category_post_count'] = Post.objects.filter(category=None).count()
+        context['comment_form'] = CommentForm
         return context
 
 class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
@@ -71,7 +60,7 @@ class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
         else:
                 return redirect('/blog/')
-
+            
 class PostUpdate(LoginRequiredMixin, UpdateView):
     model = Post
     fields = ['title', 'hook_text', 'content', 'head_image', 'file_upload', 'category', 'tags']
@@ -114,6 +103,7 @@ class PostUpdate(LoginRequiredMixin, UpdateView):
 
         return response
 
+    
 def category_page(request, slug):
     if slug == 'no_category':
         category = '미분류'
@@ -132,7 +122,7 @@ def category_page(request, slug):
             'category': category,
         }
     )
-
+    
 def tag_page(request, slug):
     tag = Tag.objects.get(slug=slug)
     post_list = tag.post_set.all()
@@ -164,7 +154,7 @@ def new_comment(request, pk):
             return redirect(post.get_absolute_url())
     else:
         raise PermissionDenied
-
+    
 class CommentUpdate(LoginRequiredMixin, UpdateView):
     model = Comment
     form_class = CommentForm
@@ -182,7 +172,7 @@ def delete_comment(request, pk):
         comment.delete()
         return redirect(post.get_absolute_url())
     else:
-        raise PermissionDenied
+        raise PermissionDenied  
 
 class PostSearch(PostList):
     paginate_by = None

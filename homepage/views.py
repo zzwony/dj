@@ -7,7 +7,7 @@ def landing(request):
         request,
         'homepage/landing.html',
         {
-            'recent_posts':recent_posts,
+            'recent_posts': recent_posts,
         }
     )
 
